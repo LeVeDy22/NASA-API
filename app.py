@@ -1,10 +1,5 @@
 from flask import Flask, render_template, request
-from dotenv import load_dotenv
-import requests
-import os
-
-load_dotenv()
-API = os.getenv("API_KEY")
+from get_result import get_photo
 
 app = Flask(__name__)
 
@@ -18,8 +13,7 @@ def get_data():
 def photo():
     date = request.form.get("date")
 
-    url = f"https://api.nasa.gov/planetary/apod?date={date}&api_key={API}"
-    result = requests.get(url=url)
+    result = get_photo(date=date)
     if result.status_code == 400:
         return render_template("error.html")
     else:
