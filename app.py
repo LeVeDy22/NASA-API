@@ -14,10 +14,17 @@ def photo():
     date = request.form.get("date")
 
     result = get_photo(date=date)
-    if result.status_code == 400:
-        return render_template("error.html")
-    else:
-        return render_template("photo.html", photo=result.json()["hdurl"])
+    if not date:
+        return "Ви не ввели дату!", 400
+    try:
+        if result.status_code == 400:
+            return render_template("date_error.html")
+        elif result.status_code == 404:
+            return render_template("missing_error.html")
+        else:
+            return render_template("photo.html", photo=result.json()["hdurl"])
+    except ValueError:
+        return "Невірний формат дати!", 400
 
 
 if __name__ == "__main__":
